@@ -7,14 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Body and font styles */
+        /* Reset and styling */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #1d1d1f;
@@ -25,7 +18,6 @@
             height: 100vh;
         }
 
-        /* Form container */
         .form-container {
             width: 400px;
             padding: 20px;
@@ -40,7 +32,6 @@
             margin-bottom: 20px;
         }
 
-        /* Form fields */
         .form-group {
             margin-bottom: 15px;
             position: relative;
@@ -53,24 +44,16 @@
             margin-bottom: 5px;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 10px;
-            padding-left: 30px; /* Space for icons */
+            padding-left: 30px;
             border-radius: 5px;
             border: 1px solid #444;
             background-color: #333;
             color: #ffffff;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #ff0047;
-            outline: none;
-        }
-
-        /* Submit button */
         .form-container button {
             width: 100%;
             padding: 10px;
@@ -86,37 +69,45 @@
             background-color: #ff3366;
         }
 
-        /* Icons */
         .form-group i {
             position: absolute;
             top: 35px;
             left: 10px;
             color: #888;
-            width: 20px;
-            text-align: center;
         }
 
-        /* Error message */
-        #error-message {
-            display: none;
+        .error-message, .success-message {
             color: #ff0047;
             font-size: 0.9rem;
+            text-align: center;
             margin-bottom: 10px;
         }
 
-        /* Media queries for responsiveness */
-        @media (max-width: 480px) {
-            .form-container {
-                width: 90%;
-            }
+        .success-message {
+            color: #00ff47;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h2>Student Registration</h2>
-        <div id="error-message"></div>
-        <form action="https://zcs.freesite.online/register_action.php" method="POST" id="registrationForm">
+        <h2>Register</h2>
+        <div class="error-message" id="error-message">
+            <?php
+            // Display error messages if any
+            if (isset($_GET['error'])) {
+                echo htmlspecialchars($_GET['error']);
+            }
+            ?>
+        </div>
+        <div class="success-message" id="success-message">
+            <?php
+            // Display success message if any
+            if (isset($_GET['success'])) {
+                echo htmlspecialchars($_GET['success']);
+            }
+            ?>
+        </div>
+        <form action="register_action.php" method="POST">
             <div class="form-group">
                 <label for="full_name">Full Name</label>
                 <i class="fas fa-user"></i>
@@ -141,14 +132,10 @@
                 <label for="password">Password</label>
                 <i class="fas fa-lock"></i>
                 <input type="password" id="password" name="password" required>
-                <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 10px; cursor: pointer;"></i>
             </div>
-            <!-- Hidden role field -->
-            <input type="hidden" id="role" name="role" value="student">
             <div class="form-group">
                 <label for="designation">Designation</label>
                 <select id="designation" name="designation" required>
-                    <option value="" disabled selected>Select your designation</option>
                     <option value="ui_ux_designer">UI UX Designer</option>
                     <option value="frontend">Frontend</option>
                     <option value="backend">Backend</option>
@@ -157,45 +144,8 @@
                     <option value="cyber_security">Cyber Security</option>
                 </select>
             </div>
-            <div class="form-group">
-                <input type="checkbox" id="terms" required>
-                <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
-            </div>
             <button type="submit">Register</button>
         </form>
     </div>
-
-    <script>
-        // Toggle password visibility
-        const togglePassword = document.querySelector('#togglePassword');
-        const passwordField = document.querySelector('#password');
-        togglePassword.addEventListener('click', function () {
-            const type = passwordField.type === 'password' ? 'text' : 'password';
-            passwordField.type = type;
-            this.classList.toggle('fa-eye-slash');
-        });
-
-        // Form validation
-        document.querySelector('#registrationForm').addEventListener('submit', function (event) {
-            const fullName = document.getElementById('full_name').value.trim();
-            const terms = document.getElementById('terms').checked;
-
-            if (!fullName) {
-                event.preventDefault();
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.style.display = 'block';
-                errorMessage.innerText = 'Full Name is required.';
-                return;
-            }
-
-            if (!terms) {
-                event.preventDefault();
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.style.display = 'block';
-                errorMessage.innerText = 'You must agree to the Terms and Conditions.';
-                return;
-            }
-        });
-    </script>
 </body>
 </html>
